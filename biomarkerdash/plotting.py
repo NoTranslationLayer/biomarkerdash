@@ -4,16 +4,20 @@ from typing import List, Dict, Optional, Tuple
 import biomarkerdash.biomarker as bm
 
 
-def determine_color(value: float, ref_range: Tuple[Optional[float], Optional[float]]) -> str:
+def determine_color(
+    value: float, ref_range: Tuple[Optional[float], Optional[float]]
+) -> str:
     """
     Determine color for a given value based on a reference range.
 
     Parameters:
     - value (float): The value for which the color is determined.
-    - ref_range (Tuple[Optional[float], Optional[float]]): Tuple containing the minimum and maximum values of the reference range.
+    - ref_range (Tuple[Optional[float], Optional[float]]): Tuple containing the 
+    minimum and maximum values of the reference range.
 
     Returns:
-    - str: A color string based on where the value falls within the reference range.
+    - str: A color string based on where the value falls within the reference 
+    range.
     """
     min_val, max_val = ref_range
     if min_val is not None and max_val is not None:
@@ -29,9 +33,9 @@ def determine_color(value: float, ref_range: Tuple[Optional[float], Optional[flo
 def plot_history(marker: bm.Biomarker) -> None:
     """
     Generate an interactive plot of the biomarker's history.
-    
-    The method uses the history and reference range of the biomarker instance to generate the plot.
-    The method is part of the Biomarker class.
+
+    The method uses the history and reference range of the biomarker instance 
+    to generate the plot.
     """
     dates = marker.history["Draw Date"].tolist()
     values = np.array(marker.history["Value"], dtype=float)
@@ -69,7 +73,8 @@ def plot_history(marker: bm.Biomarker) -> None:
 
     shapes = []
 
-    # Add horizontal dashed line for min_val and max_val and color areas outside the reference range
+    # Add horizontal dashed line for min_val and max_val and color areas 
+    # outside the reference range
     if min_val is not None:
         shapes.append(
             dict(
@@ -126,17 +131,17 @@ def plot_history(marker: bm.Biomarker) -> None:
         title=go.layout.Title(
             text=f"{marker.name} <br><sup>{marker.description}</sup>",
             xref="paper",
-            x=0
+            x=0,
         ),
         title_x=0.5,
         title_y=0.93,
         title_xanchor="center",
         title_yanchor="top",
-        xaxis_title='Date',
-        yaxis_title=f'Value ({marker.unit})',
+        xaxis_title="Date",
+        yaxis_title=f"Value ({marker.unit})",
         shapes=shapes,
         yaxis_range=y_range,
-        showlegend=False
+        showlegend=False,
     )
-    
+
     fig.show()

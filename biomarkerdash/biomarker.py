@@ -1,4 +1,6 @@
 import pandas as pd
+import plotly.graph_objects as go
+from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 
 
@@ -30,15 +32,36 @@ class Biomarker:
         self.ref_range = ref_range
         self.history = history or pd.DataFrame(columns=["Draw Date", "Value"])
 
-    def add_history_entry(self, draw_date, value):
-        """
-        Adds a new history entry for the biomarker.
-
-        Args:
-        - draw_date: Date of the draw.
-        - value: Value of the biomarker.
-        """
+    def add_history_entry(self, draw_date_str: str, value: float):
+        """Add a single history entry to the biomarker."""
+        # Parse the date string
+        draw_date = datetime.strptime(draw_date_str, '%m/%d/%y')
         self.history.loc[len(self.history)] = [draw_date, value]
+
+    def plot_history(self):
+        """Generate an interactive time series plot of the biomarker history using Plotly."""
+
+        # Create the figure
+        fig = go.Figure()
+
+        # Add a scatter plot of the draw date vs value
+        fig.add_trace(go.Scatter(
+            x=self.history['Draw Date'], 
+            y=self.history['Value'], 
+            mode='lines+markers',
+            name=self.name
+        ))
+
+        # Set layout properties
+        fig.update_layout(
+            title=f"History of {self.name}",
+            xaxis_title="Draw Date",
+            yaxis_title=self.unit,
+            xaxis=dict(type='date')
+        )
+
+        # Display the plot
+        fig.show()
 
 
 def parse_row_to_biomarker(

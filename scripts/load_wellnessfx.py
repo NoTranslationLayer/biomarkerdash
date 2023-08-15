@@ -10,7 +10,7 @@ def process_csv(csv_path: str) -> None:
     data = pd.read_csv(csv_path)
 
     # Extract the reference ranges
-    biomarker_to_range = util.parse_wellnessfx_reference_ranges(data)
+    biomarker_to_range = util.parse_wellnessfx_ref_ranges(data)
     print("Processing complete!")
 
 

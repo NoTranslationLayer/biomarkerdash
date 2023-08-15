@@ -74,12 +74,12 @@ def parse_ref_range(range_str: str) -> Tuple[Optional[float], Optional[float]]:
     return None, None
 
 
-def parse_wellnessfx_reference_ranges(
+def parse_wellnessfx_ref_ranges(
     data: pd.DataFrame,
 ) -> Dict[str, Tuple[Optional[float], Optional[float]]]:
     """
-    Parse the data from the WellnessFX exported CSV to return a dictionary mapping marker names
-    to their reference ranges.
+    Parse the data from the WellnessFX exported CSV to return a dictionary 
+    mapping marker names to their reference ranges.
     """
     biomarker_to_range: Dict[str, Tuple[Optional[float], Optional[float]]] = {}
 

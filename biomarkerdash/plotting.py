@@ -1,5 +1,6 @@
 import numpy as np
 import plotly.graph_objects as go
+import plotly.offline as pyo
 from typing import List, Dict, Optional, Tuple
 import biomarkerdash.biomarker as bm
 
@@ -30,7 +31,7 @@ def determine_color(
         return "grey"
 
 
-def plot_history(marker: bm.Biomarker) -> None:
+def plot_history(marker: bm.Biomarker, save_to: str) -> None:
     """
     Generate an interactive plot of the biomarker's history.
     
@@ -38,7 +39,13 @@ def plot_history(marker: bm.Biomarker) -> None:
     The method is part of the Biomarker class.
     """
     dates = marker.history["Draw Date"].tolist()
-    values = np.array(marker.history["Value"], dtype=float)
+    values = marker.history["Value"]
+    try:
+        values = np.array(values, dtype=float)
+    except ValueError:
+        print(f"Failed to extract numberical values for {marker.name}")
+        return
+
 
     # Get colors based on reference range
     colors = [determine_color(val, marker.ref_range) for val in values]
@@ -148,4 +155,6 @@ def plot_history(marker: bm.Biomarker) -> None:
         showlegend=False
     )
     
-    fig.show()
+    # fig.show()
+    pyo.plot(fig, filename=save_to, auto_open=False)
+

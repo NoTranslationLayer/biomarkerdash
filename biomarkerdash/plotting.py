@@ -33,9 +33,9 @@ def determine_color(
 def plot_history(marker: bm.Biomarker) -> None:
     """
     Generate an interactive plot of the biomarker's history.
-
-    The method uses the history and reference range of the biomarker instance 
-    to generate the plot.
+    
+    The method uses the history and reference range of the biomarker instance to generate the plot.
+    The method is part of the Biomarker class.
     """
     dates = marker.history["Draw Date"].tolist()
     values = np.array(marker.history["Value"], dtype=float)
@@ -48,7 +48,7 @@ def plot_history(marker: bm.Biomarker) -> None:
     # Add a grey line to connect points
     fig.add_trace(
         go.Scatter(
-            x=dates, y=values, mode="lines", line=dict(color="lightgrey")
+            x=dates, y=values, mode="lines", line=dict(color="grey")
         )
     )
 
@@ -64,17 +64,21 @@ def plot_history(marker: bm.Biomarker) -> None:
 
     min_val, max_val = marker.ref_range
 
-    # Define a buffer for y-axis (e.g., 10% of max_val)
-    buffer = 0.1 * (max_val if max_val is not None else max(values))
-    y_range = [
-        min_val - buffer if min_val is not None else min(values) - buffer,
-        max_val + buffer if max_val is not None else max(values) + buffer,
-    ]
+    # Determine the data range
+    data_min = min(values)
+    data_max = max(values)
 
+    # Define a buffer for y-axis (e.g., 10% of max_val)
+    buffer = 0.1 * (max_val if max_val is not None else data_max)
+    
+    # Determine the overall y-axis range
+    y_range = [
+        min(min_val - buffer if min_val is not None else data_min, data_min - buffer),
+        max(max_val + buffer if max_val is not None else data_max, data_max + buffer)
+    ]
     shapes = []
 
-    # Add horizontal dashed line for min_val and max_val and color areas 
-    # outside the reference range
+    # Add horizontal dashed line for min_val and max_val and color areas outside the reference range
     if min_val is not None:
         shapes.append(
             dict(
@@ -131,17 +135,17 @@ def plot_history(marker: bm.Biomarker) -> None:
         title=go.layout.Title(
             text=f"{marker.name} <br><sup>{marker.description}</sup>",
             xref="paper",
-            x=0,
+            x=0
         ),
         title_x=0.5,
         title_y=0.93,
         title_xanchor="center",
         title_yanchor="top",
-        xaxis_title="Date",
-        yaxis_title=f"Value ({marker.unit})",
+        xaxis_title='Date',
+        yaxis_title=f'Value ({marker.unit})',
         shapes=shapes,
         yaxis_range=y_range,
-        showlegend=False,
+        showlegend=False
     )
-
+    
     fig.show()

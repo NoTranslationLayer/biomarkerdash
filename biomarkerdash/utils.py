@@ -4,7 +4,7 @@ from typing import Dict, Tuple, Optional
 
 
 def parse_ref_range(range_str: str) -> Tuple[Optional[float], Optional[float]]:
-    """Parse a reference range string and return a tuple (min, max)."""
+    """Parse a reference range string and return a tuple (min_val, max_val)."""
 
     # Ensure the input is treated as a string
     range_str = str(range_str).strip()  
@@ -25,16 +25,16 @@ def parse_ref_range(range_str: str) -> Tuple[Optional[float], Optional[float]]:
         (r"^>=([\d.]+)$", (1, None)), # ">=125", etc.
         (r"^([\d.]+) OR LESS$", (None, 1)), # "0.2 OR LESS"
         (r"^([\d.-]+) - \+([\d.]+)$", (1, 2)), # "-2.0 - +2.0"
-        (r"^([\d.-]+)-([\d.]+)$", (1, 2)), # standard "min-max" format
+        (r"^([\d.-]+)-([\d.]+)$", (1, 2)), # standard "min_val-max_val" format
     ]
 
     for pattern, idx in patterns:
         match = re.match(pattern, range_str)
         if match:
             try:
-                min = float(match.group(idx[0])) if idx[0] is not None else None
-                max = float(match.group(idx[1])) if idx[1] is not None else None
-                return min, max
+                min_val = float(match.group(idx[0])) if idx[0] is not None else None
+                max_val = float(match.group(idx[1])) if idx[1] is not None else None
+                return min_val, max_val
             except (ValueError, IndexError):
                 pass
 
@@ -59,29 +59,29 @@ def parse_wellnessfx_ref_ranges(
             # no reference range data for this entry
             continue
 
-        min, max = parse_ref_range(ref_range)
-        if min is not None or max is not None:
+        min_val, max_val = parse_ref_range(ref_range)
+        if min_val is not None or max_val is not None:
             if marker_name in biomarker_to_range:
-                existing_min, existing_max = biomarker_to_range[marker_name]
+                existing_min_val, existing_max_val = biomarker_to_range[marker_name]
                 # Update the reference range if the new one is different
-                if existing_min != min or existing_max != max:
+                if existing_min_val != min_val or existing_max_val != max_val:
                     print(
                         f"Warning: Different reference range for {marker_name} "
                         f"on {row['Draw Date']}. "
-                        f"Existing: {existing_min}-{existing_max}, "
-                        f"New: {min}-{max}"
+                        f"Existing: {existing_min_val}-{existing_max_val}, "
+                        f"New: {min_val}-{max_val}"
                         # f"\nCurrent ref range str: {ref_range}"
                     )
-                    biomarker_to_range[marker_name] = (min, max)
+                    biomarker_to_range[marker_name] = (min_val, max_val)
             else:
-                biomarker_to_range[marker_name] = (min, max)
+                biomarker_to_range[marker_name] = (min_val, max_val)
         else:
-            # couldn't parse min/max value
+            # couldn't parse min_val/max_val value
             print(
                 f"Error parsing reference range for {marker_name} on "
                 f"{row['Draw Date']} from '{ref_range}'"
-                # f"\nmin: {min}"
-                # f"\nmax: {max}"
+                # f"\nmin_val: {min_val}"
+                # f"\nmax_val: {max_val}"
             )
 
     return biomarker_to_range

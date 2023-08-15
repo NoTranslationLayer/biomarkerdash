@@ -29,14 +29,15 @@ def parse_ref_range(range_str: str) -> Tuple[Optional[float], Optional[float]]:
     ]
 
     for pattern, idx in patterns:
-        match = re.match(pattern, range_str)
-        if match:
-            try:
-                min_val = float(match.group(idx[0])) if idx[0] is not None else None
-                max_val = float(match.group(idx[1])) if idx[1] is not None else None
-                return min_val, max_val
-            except (ValueError, IndexError):
-                pass
+        m = re.match(pattern, range_str)
+        if not m:
+            continue
+        try:
+            min_val = float(m.group(idx[0])) if idx[0] is not None else None
+            max_val = float(m.group(idx[1])) if idx[1] is not None else None
+            return min_val, max_val
+        except (ValueError, IndexError):
+            pass
 
     return None, None
 

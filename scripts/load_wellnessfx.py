@@ -38,6 +38,7 @@ def process_csv(csv_path: str) -> None:
                     f"on {row['Draw Date']}. "
                     f"Existing: {existing_min}-{existing_max}, "
                     f"New: {min_val}-{max_val}"
+                    # f"\nCurrent ref range str: {ref_range}"
                 )
                 biomarker_to_range[marker_name] = (min_val, max_val)
         else:

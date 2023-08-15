@@ -9,10 +9,22 @@ def parse_reference_range(range_str: str) -> Tuple[Optional[float], Optional[flo
     if not range_str or range_str.lower() == 'nan':
         return None, None
     
+    # If the reference range is a single number 0
+    if range_str == '0':
+        return 0.0, 0.0
+
+    
     # For formats like "<5.7", "<130", etc.
     if range_str.startswith("<"):
         try:
             return None, float(range_str[1:])
+        except ValueError:
+            pass
+
+    # For formats like ">5.7", ">130", etc.
+    if range_str.startswith(">"):
+        try:
+            return float(range_str[1:]), None
         except ValueError:
             pass
 
@@ -22,6 +34,11 @@ def parse_reference_range(range_str: str) -> Tuple[Optional[float], Optional[flo
         if len(parts) == 4 and parts[0] == '>':
             try:
                 return float(parts[3]), None
+            except ValueError:
+                pass
+        if len(parts) == 4 and parts[0] == '<':
+            try:
+                return None, float(parts[3])
             except ValueError:
                 pass
     elif range_str.startswith(">="):
@@ -44,5 +61,15 @@ def parse_reference_range(range_str: str) -> Tuple[Optional[float], Optional[flo
             return min_val, max_val
         except ValueError:
             pass
+
+    # For the special case format '-2.0 - +2.0'
+    if range_str.startswith('-') and ' - +' in range_str:
+        try:
+            parts = range_str.split(' - +')
+            min_val, max_val = float(parts[0]), float(parts[1])
+            return min_val, max_val
+        except ValueError:
+            pass
+
 
     return None, None

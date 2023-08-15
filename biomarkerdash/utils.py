@@ -1,78 +1,44 @@
+import re
 import pandas as pd
 from typing import Dict, Tuple, Optional
 
 
 def parse_ref_range(range_str: str) -> Tuple[Optional[float], Optional[float]]:
     """Parse a reference range string and return a tuple (min, max)."""
-    range_str = str(
-        range_str
-    ).strip()  # Ensure the input is treated as a string
+
+    # Ensure the input is treated as a string
+    range_str = str(range_str).strip()  
+    
     if not range_str or range_str.lower() == "nan":
         return None, None
 
-    # If the reference range is a single number 0
+    # Single number 0 pattern
     if range_str == "0":
         return 0.0, 0.0
 
-    # For formats like "<5.7", "<130", etc.
-    if range_str.startswith("<"):
-        try:
-            return None, float(range_str[1:])
-        except ValueError:
-            pass
+    # Patterns
+    patterns = [
+        (r"^<([\d.]+)$", (None, 1)), # "<5.7", "<130", etc.
+        (r"^>([\d.]+)$", (1, None)), # ">5.7", ">130", etc.
+        (r"^> OR = ([\d.]+)$", (1, None)), # "> OR = 60", etc.
+        (r"^< OR = ([\d.]+)$", (None, 1)), # "< OR = 60", etc.
+        (r"^>=([\d.]+)$", (1, None)), # ">=125", etc.
+        (r"^([\d.]+) OR LESS$", (None, 1)), # "0.2 OR LESS"
+        (r"^([\d.-]+) - \+([\d.]+)$", (1, 2)), # "-2.0 - +2.0"
+        (r"^([\d.-]+)-([\d.]+)$", (1, 2)), # standard "min-max" format
+    ]
 
-    # For formats like ">5.7", ">130", etc.
-    if range_str.startswith(">"):
-        try:
-            return float(range_str[1:]), None
-        except ValueError:
-            pass
-
-    # For formats like "> OR = 60", ">=125", etc.
-    if "OR" in range_str and "=" in range_str:
-        parts = range_str.split()
-        if len(parts) == 4 and parts[0] == ">":
+    for pattern, idx in patterns:
+        match = re.match(pattern, range_str)
+        if match:
             try:
-                return float(parts[3]), None
-            except ValueError:
+                min = float(match.group(idx[0])) if idx[0] is not None else None
+                max = float(match.group(idx[1])) if idx[1] is not None else None
+                return min, max
+            except (ValueError, IndexError):
                 pass
-        if len(parts) == 4 and parts[0] == "<":
-            try:
-                return None, float(parts[3])
-            except ValueError:
-                pass
-    elif range_str.startswith(">="):
-        try:
-            return float(range_str[2:]), None
-        except ValueError:
-            pass
-
-    # For formats like "0.2 OR LESS"
-    if "OR LESS" in range_str:
-        try:
-            return None, float(range_str.split()[0])
-        except ValueError:
-            pass
-
-    # Standard range format "min-max"
-    if "-" in range_str:
-        try:
-            min_val, max_val = map(float, range_str.split("-"))
-            return min_val, max_val
-        except ValueError:
-            pass
-
-    # For the special case format '-2.0 - +2.0'
-    if range_str.startswith("-") and " - +" in range_str:
-        try:
-            parts = range_str.split(" - +")
-            min_val, max_val = float(parts[0]), float(parts[1])
-            return min_val, max_val
-        except ValueError:
-            pass
 
     return None, None
-
 
 def parse_wellnessfx_ref_ranges(
     data: pd.DataFrame,
@@ -93,29 +59,29 @@ def parse_wellnessfx_ref_ranges(
             # no reference range data for this entry
             continue
 
-        min_val, max_val = parse_ref_range(ref_range)
-        if min_val is not None or max_val is not None:
+        min, max = parse_ref_range(ref_range)
+        if min is not None or max is not None:
             if marker_name in biomarker_to_range:
                 existing_min, existing_max = biomarker_to_range[marker_name]
                 # Update the reference range if the new one is different
-                if existing_min != min_val or existing_max != max_val:
+                if existing_min != min or existing_max != max:
                     print(
                         f"Warning: Different reference range for {marker_name} "
                         f"on {row['Draw Date']}. "
                         f"Existing: {existing_min}-{existing_max}, "
-                        f"New: {min_val}-{max_val}"
+                        f"New: {min}-{max}"
                         # f"\nCurrent ref range str: {ref_range}"
                     )
-                    biomarker_to_range[marker_name] = (min_val, max_val)
+                    biomarker_to_range[marker_name] = (min, max)
             else:
-                biomarker_to_range[marker_name] = (min_val, max_val)
+                biomarker_to_range[marker_name] = (min, max)
         else:
             # couldn't parse min/max value
             print(
                 f"Error parsing reference range for {marker_name} on "
                 f"{row['Draw Date']} from '{ref_range}'"
-                # f"\nmin_val: {min_val}"
-                # f"\nmax_val: {max_val}"
+                # f"\nmin: {min}"
+                # f"\nmax: {max}"
             )
 
     return biomarker_to_range

@@ -29,6 +29,19 @@ def combine_html_files(plot_html_list: List[str], output_file: str):
     <!DOCTYPE html>
     <html lang="en">
     <head>
+        <style>
+            body {
+                font-family: "proxima-nova-soft", "proxima-nova", Helvetica, Arial, sans-serif;
+                font-weight: 500;
+                line-height: 1.2;
+                color: #555;
+            }
+            
+            h2 {
+                border-bottom: 1px solid lightgrey;
+                padding-bottom: 10px;
+            }
+        </style>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">

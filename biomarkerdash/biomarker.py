@@ -35,32 +35,59 @@ class Biomarker:
     def add_history_entry(self, draw_date_str: str, value: float):
         """Add a single history entry to the biomarker."""
         # Parse the date string
-        draw_date = datetime.strptime(draw_date_str, '%m/%d/%y')
+        draw_date = datetime.strptime(draw_date_str, "%m/%d/%y")
         self.history.loc[len(self.history)] = [draw_date, value]
 
     def plot_history(self):
-        """Generate an interactive time series plot of the biomarker history using Plotly."""
+        """Generate an interactive plot of the biomarker's history."""
+        dates = self.history["Draw Date"].tolist()
+        # Convert values to numpy array
+        values = np.array(self.history["Value"], dtype=float)
 
-        # Create the figure
+        # Determine colors for each point based on reference range
+        def determine_color(value, ref_range):
+            min_val, max_val = ref_range
+            if min_val is not None and max_val is not None:
+                return "green" if min_val <= value <= max_val else "red"
+            elif min_val is not None:
+                return "green" if value >= min_val else "red"
+            elif max_val is not None:
+                return "green" if value <= max_val else "red"
+            else:  # No reference range present
+                return "grey"
+
+        # Get colors based on reference range
+        colors = [determine_color(val, self.ref_range) for val in values]
+
         fig = go.Figure()
 
-        # Add a scatter plot of the draw date vs value
-        fig.add_trace(go.Scatter(
-            x=self.history['Draw Date'], 
-            y=self.history['Value'], 
-            mode='lines+markers',
-            name=self.name
-        ))
-
-        # Set layout properties
-        fig.update_layout(
-            title=f"History of {self.name}",
-            xaxis_title="Draw Date",
-            yaxis_title=self.unit,
-            xaxis=dict(type='date')
+        # Add a grey line to connect points
+        fig.add_trace(
+            go.Scatter(
+                x=dates,
+                y=values,
+                mode="lines",
+                line=dict(color="lightgrey"),
+                name="Values",
+            )
         )
 
-        # Display the plot
+        # Add points with colors based on reference range
+        fig.add_trace(
+            go.Scatter(
+                x=dates,
+                y=values,
+                mode="markers",
+                marker=dict(color=colors, size=10),
+                name="Values",
+            )
+        )
+
+        fig.update_layout(
+            title=f"History of {self.name}",
+            xaxis_title="Date",
+            yaxis_title=f"Value ({self.unit})",
+        )
         fig.show()
 
 

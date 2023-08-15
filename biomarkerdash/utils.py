@@ -2,6 +2,7 @@ import re
 import pandas as pd
 from typing import Dict, Tuple, Optional
 
+import biomarkerdash.biomarker as bm
 
 def parse_ref_range(range_str: str) -> Tuple[Optional[float], Optional[float]]:
     """Parse a reference range string and return a tuple (min_val, max_val)."""
@@ -88,3 +89,34 @@ def parse_wellnessfx_ref_ranges(
             )
 
     return biomarker_to_range
+
+def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
+    """
+    Processes a CSV file and returns a dictionary of biomarkers.
+
+    Args:
+    - csv_path: Path to the CSV file.
+
+    Returns:
+    - Dictionary mapping marker names to Biomarker objects.
+    """
+    data = pd.read_csv(csv_path)
+
+    # Extract the reference ranges
+    biomarker_to_range = parse_wellnessfx_ref_ranges(data)
+
+    biomarkers: Dict[str, bm.Biomarker] = {}
+
+    for _, row in data.iterrows():
+        marker_name = row["Marker Name"]
+
+        if marker_name not in biomarkers:
+            ref_range = biomarker_to_range.get(marker_name, (None, None))
+            biomarkers[marker_name] = bm.parse_row_to_biomarker(row, ref_range)
+
+        biomarkers[marker_name].add_history_entry(
+            row["Draw Date"], row["Value"]
+        )
+
+    print(f"Loaded {len(biomarkers.keys())} biomarkers")
+    return biomarkers

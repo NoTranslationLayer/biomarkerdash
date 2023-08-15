@@ -1,3 +1,14 @@
+# Misc. Mac filesystem
+.DS_Store
+
+# Raw and processed data - Ignore all .json and .csv files
+*.json
+*.csv
+
+# Allow .json and .csv files in the "test" directory
+!/test/*.json
+!/test/*.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

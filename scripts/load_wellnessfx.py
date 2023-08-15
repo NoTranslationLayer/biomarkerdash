@@ -16,6 +16,8 @@ def process_csv(csv_path: str) -> None:
     for _, row in data.iterrows():
         marker_name: str = row["Marker Name"]
         ref_range: str = row["Reference Range"]
+        if str(ref_range).strip().lower() == "nan":
+            ref_range = ""
 
         # Check and parse the reference range
         min_val, max_val = parse_reference_range(ref_range)
@@ -23,6 +25,8 @@ def process_csv(csv_path: str) -> None:
             print(
                 f"Error parsing reference range for {marker_name} on "
                 f"{row['Draw Date']} from '{ref_range}'"
+                # f"\nmin_val: {min_val}"
+                # f"\nmax_val: {max_val}"
             )
 
         # Check against the stored reference range for this biomarker

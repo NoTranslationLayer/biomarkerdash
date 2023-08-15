@@ -9,12 +9,19 @@ import biomarkerdash.biomarker as bm
 from typing import List, Dict, Optional, Tuple
 
 
-def combine_html_files(filenames: List[str], output_file: str):
+import yaml
+
+def load_categories(filename: str) -> Dict:
+    """Load biomarker categories from a YAML file."""
+    with open(filename, 'r', encoding='utf-8') as f:
+        return yaml.safe_load(f)
+
+def combine_html_files(plot_html_list: List[str], output_file: str):
     """
     Combine multiple HTML files into a single page.
 
     Args:
-    - filenames (List[str]): List of filenames to combine.
+    - plot_html_list (List[str]): List of HTML contents to combine.
     - output_file (str): Name of the combined output file.
     """
     # Header
@@ -29,17 +36,8 @@ def combine_html_files(filenames: List[str], output_file: str):
     </head>
     <body>
     """
-
-    # Embed each file's content
-    for filename in filenames:
-        if not os.path.exists(filename):
-            print(f"{filename} not found, skipping")
-            continue
-        with open(filename, 'r', encoding='utf-8') as f:
-            content = f.read()
-            start_index = content.find('<body>') + len('<body>')
-            end_index = content.find('</body>')
-            combined_html += content[start_index:end_index]
+    for plot_html in plot_html_list:
+        combined_html += plot_html
 
     # Footer
     combined_html += "</body></html>"
@@ -59,12 +57,33 @@ if __name__ == "__main__":
     plot_output_dir = "_includes"
     os.makedirs(plot_output_dir, exist_ok=True)
 
-    html_files = []
-    for marker_name, marker_obj in biomarkers.items():
-        filename = os.path.join(plot_output_dir, util.generate_filename(marker_name))
-        html_files.append(filename)
-        plot.plot_history(marker_obj, save_to=filename)
-        print(f"Plot for {marker_name} saved to {filename}.")
 
-    combine_html_files(html_files, "dashboard.html")
+    categories = load_categories('categories.yaml')
+
+    html_content = []
+
+    for category, subcategories in categories.items():
+        html_content.append(f"<h2>{category}</h2>")
+        
+        for subcategory, biomarkers_list in subcategories.items():
+            html_content.append(f"<h3>{subcategory}</h3>")
+
+            # Generate plots for biomarkers in the subcategory
+            for marker_name in biomarkers_list:
+                marker_obj = biomarkers.get(marker_name)
+                if marker_obj:  # Check if biomarker data exists
+                    filename = os.path.join(plot_output_dir, util.generate_filename(marker_name))
+                    
+                    # Save the individual plot
+                    plot.plot_history(marker_obj, save_to=filename)
+                    print(f"Plot for {marker_name} saved to {filename}.")
+
+                    # Read the generated HTML file and store its content
+                    if not os.path.exists(filename):
+                        print(f"{filename} not found, skipping")
+                        continue
+                    with open(filename, 'r', encoding='utf-8') as f:
+                        html_content.append(f.read())
+
+    combine_html_files(html_content, "dashboard.html")
     print("All plots combined into dashboard.html.")

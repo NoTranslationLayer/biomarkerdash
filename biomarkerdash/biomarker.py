@@ -107,7 +107,7 @@ def parse_row_to_biomarker(
     name = row["Marker Name"]
     # Assuming these columns exist in your CSV. Modify as needed.
     description = row.get("Description", "")
-    unit = row.get("Unit", "")
+    unit = row.get("Units", "")
 
     biomarker = Biomarker(name, description, unit, ref_range)
     return biomarker

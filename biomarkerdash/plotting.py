@@ -69,12 +69,12 @@ def plot_history(marker: bm.Biomarker) -> None:
     data_max = max(values)
 
     # Define a buffer for y-axis (e.g., 10% of max_val)
-    buffer = 0.1 * (max_val if max_val is not None else data_max)
+    buffer = 0.1 * data_max
     
     # Determine the overall y-axis range
     y_range = [
-        min(min_val - buffer if min_val is not None else data_min, data_min - buffer),
-        max(max_val + buffer if max_val is not None else data_max, data_max + buffer)
+        data_min - buffer,
+        data_max + buffer
     ]
     shapes = []
 

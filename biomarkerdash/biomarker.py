@@ -61,7 +61,7 @@ def parse_row_to_biomarker(
     Returns:
     - Biomarker instance.
     """
-    name = row[COLUMN_MARKER_NAME]
+    name = row[COLUMN_MARKER_NAME].strip()
     # Assuming these columns exist in your CSV. Modify as needed.
     description = row.get(COLUMN_MARKER_DESCRIPTION, "")
     unit = row.get(COLUMN_UNIT, "")

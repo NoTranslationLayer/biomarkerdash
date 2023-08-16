@@ -59,7 +59,7 @@ def parse_wellnessfx_ref_ranges(
     biomarker_to_range: Dict[str, Tuple[Optional[float], Optional[float]]] = {}
 
     for _, row in data.iterrows():
-        marker_name: str = row[COLUMN_MARKER_NAME]
+        marker_name: str = row[COLUMN_MARKER_NAME].strip()
         ref_range: str = row[COLUMN_REFERENCE_RANGE]
         if str(ref_range).strip().lower() == "nan":
             ref_range = ""
@@ -116,7 +116,7 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
     biomarkers: Dict[str, bm.Biomarker] = {}
 
     for _, row in data.iterrows():
-        marker_name = row[COLUMN_MARKER_NAME]
+        marker_name = row[COLUMN_MARKER_NAME].strip()
 
         if marker_name not in biomarkers:
             ref_range = biomarker_to_range.get(marker_name, (None, None))

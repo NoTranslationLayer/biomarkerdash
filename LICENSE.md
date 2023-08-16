@@ -1,3 +1,5 @@
+BSD 3-Clause License
+
 Copyright 2023 No Translation Layer
 
 Redistribution and use in source and binary forms, with or without

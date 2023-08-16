@@ -24,6 +24,7 @@ def combine_html_files(plot_html_list: List[str], output_file: str):
     - plot_html_list (List[str]): List of HTML contents to combine.
     - output_file (str): Name of the combined output file.
     """
+
     # Header
     combined_html = """
     <!DOCTYPE html>
@@ -41,6 +42,16 @@ def combine_html_files(plot_html_list: List[str], output_file: str):
                 border-bottom: 1px solid lightgrey;
                 padding-bottom: 10px;
             }
+
+            /* Added these styles for links */
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
         </style>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -49,6 +60,15 @@ def combine_html_files(plot_html_list: List[str], output_file: str):
     </head>
     <body>
     """
+
+    # Add Table of Contents
+    combined_html += "<h1>Table of Contents</h1>"
+    combined_html += "<ul>"
+    for category, subcategories in categories.items():    
+        combined_html += f'<li><a href="#{category}">{category}</a></li>'
+    combined_html += "</ul>"
+    combined_html += "<hr>"
+
     for plot_html in plot_html_list:
         combined_html += plot_html
 
@@ -58,6 +78,7 @@ def combine_html_files(plot_html_list: List[str], output_file: str):
     # Write combined content to file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(combined_html)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -76,10 +97,10 @@ if __name__ == "__main__":
     html_content = []
 
     for category, subcategories in categories.items():
-        html_content.append(f"<h2>{category}</h2>")
+        html_content.append(f'<h2 id="{category}">{category}</h2>')
         
         for subcategory, biomarkers_list in subcategories.items():
-            html_content.append(f"<h3>{subcategory}</h3>")
+            html_content.append(f'<h3 id="{subcategory}">{subcategory}</h3>')
 
             # Generate plots for biomarkers in the subcategory
             for marker_name in biomarkers_list:

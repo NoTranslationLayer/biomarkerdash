@@ -38,22 +38,27 @@ def combine_html_files(
     return output_path
 
 
-def load_css(css_filepath: str) -> str:
-    with open(css_filepath, "r", encoding="utf-8") as f:
+def load_css(filepath: str) -> str:
+    """Load CSS content from a file."""
+    with open(filepath, 'r') as f:
         return f.read()
 
-
 def create_header_toc(
-    category_files: Dict[str, str], css_filepath: str = "_includes/styles.css"
-):
+    category_files: Dict[str, str], 
+    css_filepath: str = "_includes/styles.css"
+) -> str:
     """
-    Create a header and table of contents HTML linking to various category pages.
+    Generate an HTML header and table of contents with links to category pages.
 
     Args:
-    - category_files (Dict[str, str]): Dictionary mapping category names to their file names.
-    - css_filepath (str): Path to the CSS file.
-    """
+        category_files (Dict[str, str]): A mapping of category names to their 
+        corresponding file names.
+        css_filepath (str, optional): The file path to the desired CSS 
+        stylesheet. Defaults to "_includes/styles.css".
 
+    Returns:
+        str: HTML content with headers and table of contents.
+    """
     css_content = load_css(css_filepath)
 
     # Header

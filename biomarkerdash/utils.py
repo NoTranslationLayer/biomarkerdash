@@ -132,7 +132,7 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
 
 def generate_filename(marker_name: str) -> str:
     """
-    Generate an appropriate filename by removing or replacing certain 
+    Generate an appropriate filename by removing or replacing certain
     characters.
 
     Args:
@@ -144,7 +144,7 @@ def generate_filename(marker_name: str) -> str:
 
     # Define characters to be replaced and their replacements
     replacements = {
-        " ": "_",    # replace spaces with underscores
+        " ": "_",  # replace spaces with underscores
         "%": "pct",  # replace '%' with 'pct'
     }
 

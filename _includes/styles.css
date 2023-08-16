@@ -3,6 +3,9 @@ body {
     font-weight: 500;
     line-height: 1.2;
     color: #555;
+    padding-left: 100px;
+    padding-right: 100px;
+
 }
 
 h2 {
@@ -10,7 +13,6 @@ h2 {
     padding-bottom: 10px;
 }
 
-/* Added these styles for links */
 a {
     text-decoration: none;
     color: inherit;

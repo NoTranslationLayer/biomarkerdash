@@ -32,6 +32,7 @@
 
 import os
 import biomarkerdash.utils as util
+from biomarkerdash.constants import FOOTER_HTML
 from typing import List, Dict, Optional, Tuple
 
 
@@ -58,7 +59,7 @@ def combine_html_files(
         combined_html += plot_html
 
     # Footer
-    combined_html += "</body></html>"
+    combined_html += FOOTER_HTML
 
     sanitized_filename = util.generate_filename(category)
     output_path = os.path.join(output_directory, sanitized_filename)

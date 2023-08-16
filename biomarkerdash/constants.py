@@ -43,3 +43,10 @@ COLOR_RED = "rgb(236, 2, 0)"
 COLOR_GREEN = "rgb(82, 182, 2)"
 COLOR_LINE = "rgba(0, 0, 0, 0.15)"
 COLOR_BG_OUTSIDE_REF_RANGE = "rgba(236,2,0,0.2)"
+
+# HTML
+FOOTER_HTML = """
+<div style="text-align: center; margin-top: 50px; font-size: 14px;">
+    &copy; No Translation Layer LLC. All rights reserved.
+</div></body></html>"
+"""

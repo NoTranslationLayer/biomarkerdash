@@ -33,16 +33,15 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import os
-import pandas as pd
 import sys
+import yaml
+
+from typing import Dict
+
 import biomarkerdash.utils as util
 import biomarkerdash.plotting as plot
 import biomarkerdash.html as htm
-import biomarkerdash.biomarker as bm
-from typing import List, Dict, Optional, Tuple
-
-
-import yaml
+from biomarkerdash.constants import FOOTER_HTML
 
 
 def load_categories(filename: str) -> Dict:
@@ -118,7 +117,7 @@ if __name__ == "__main__":
         }
     )
 
-    index_page_html_content += "</body></html>"
+    index_page_html_content += FOOTER_HTML
 
     with open(index_page_filename, "w", encoding="utf-8") as f:
         f.write(index_page_html_content)

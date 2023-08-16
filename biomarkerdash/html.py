@@ -4,7 +4,10 @@ from typing import List, Dict, Optional, Tuple
 
 
 def combine_html_files(
-    category: str, plot_html_list: List[str], output_directory: str = "_categories") -> str:
+    category: str,
+    plot_html_list: List[str],
+    output_directory: str = "_categories",
+) -> str:
     """
     Combine multiple HTML sections related to a category into a single page.
 
@@ -36,10 +39,13 @@ def combine_html_files(
 
 
 def load_css(css_filepath: str) -> str:
-    with open(css_filepath, 'r', encoding='utf-8') as f:
+    with open(css_filepath, "r", encoding="utf-8") as f:
         return f.read()
 
-def create_header_toc(category_files: Dict[str, str], css_filepath: str = "_includes/styles.css"):
+
+def create_header_toc(
+    category_files: Dict[str, str], css_filepath: str = "_includes/styles.css"
+):
     """
     Create a header and table of contents HTML linking to various category pages.
 
@@ -63,7 +69,7 @@ def create_header_toc(category_files: Dict[str, str], css_filepath: str = "_incl
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Combined Plots</title>
+        <title>Biomarker Dashboard</title>
     </head>
     <body>
     """

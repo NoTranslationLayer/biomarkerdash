@@ -15,7 +15,7 @@ If you've been using WellnessFX and want to migrate your data:
 ![How to export CSV from WellnessFX](./assets/wellnessfx_export.png)
 
 
-By following the above steps, you'll obtain a CSV file which can be easily imported into this dashboard.
+By following the above steps, you'll obtain a CSV file named `test_result_export.csv` which can be easily imported into this dashboard.
 
 ## CSV Input Format
 For those who wish to continue adding their own data or for general understanding, it's essential to format the CSV correctly. Here's the expected structure:
@@ -30,13 +30,23 @@ For those who wish to continue adding their own data or for general understandin
 - **Marker Description:** A brief description or details about the biomarker. This field can be kept empty if not available.
 - **Value:** The recorded value for the biomarker in the bloodwork. This can be a numerical value (e.g., `5.6`).
 - **Units:** The measurement unit for the value (e.g., `mg/dL`, `mmol/L`).
-- **Reference Range:** The normal or reference range for the biomarker. It's typically provided in the format `min_value-max_value` (e.g., `4.5-6.0`). This can be helpful to understand if your values are within the expected range. A variety of input formats for reference ranges are supported, see the [parsing test code](tests/test_parse_reference_range.y) for examples of what is supported.
+- **Reference Range:** The normal or reference range for the biomarker. It's typically provided in the format `min_value-max_value` (e.g., `4.5-6.0`). This can be helpful to understand if your values are within the expected range. A variety of input formats for reference ranges are supported, see the [parsing test code](tests/test_parse_reference_range.py) for examples of what is supported.
 - **Source** (Optional)**:** The source or lab where the bloodwork was done.
 
 ## Getting Started
-1. Clone this repository.
-2. Follow the installation and setup instructions provided.
-3. Import your CSV, and visualize your biomarker trends!
+
+```bash
+git clone https://github.com/NoTranslationLayer/biomarkerdash
+cd biomarkerdash
+pip install .
+cd scripts
+./load_wellnessfx.py test_result_export.csv
+```
+
+If the CSV file was downloaded to a different directory, replace `test_result_export.csv` above with the full path to the CSV file.
+
+The script will generate a file named `BiomarkerDashboard.html` in the top level folder of the cloned repository. Open the file in any web browser to visualize the exported data.
+
 
 ## Contributing
 Feel free to contribute to this project by opening issues or submitting pull requests. Any feedback or improvements are welcomed.

@@ -1,0 +1,161 @@
+Cardiovascular Health:
+  Basic Lipid Panel:
+    - Total Cholesterol
+    - LDL
+    - HDL
+    - Triglycerides
+    - Total to HDL Ratio
+    - Triglycerides to HDL Ratio
+    - Non-HDL Cholesterol (Calculated)
+  LDL Particles:
+    - Apo B
+    - Lp(a)
+    - Peak LDL Size
+    - LDL Particles
+    - LDL Phenotype
+    - Small LDL
+    - Medium LDL
+  HDL Particles:
+    - Apo A1
+    - Large HDL
+  Inflammation:
+    - hs-CRP
+    - Homocysteine
+    - Fibrinogen
+
+Fatty Acids:
+  Free Fatty Acids:
+    - Free Fatty Acids
+  Index:
+    - Omega Index
+  Omega-3 Fatty Acids:
+    - Eicosapentaenoic acid (EPA)
+    - Docosahexaenoic acid (DHA)
+  Fatty Acids Ratios:
+    - Omega-6:Omega-3 Ratio
+    - EPA:AA Ratio
+    
+Metabolic Health:
+  Diabetes & Insulin Resistance:
+    - Insulin
+    - Hemoglobin A1c (HbA1c)
+    - Glucose
+    - HOMA-IR SCORE
+  Thyroid:
+    - TSH
+    - Triiodothyronine (T3, total)
+    - Free T3
+    - T-Uptake
+    - Thyroxine (T4, total)
+    - Free T4
+    - Thyroid Peroxidase AB
+    - Free Thyroxine Index
+    - Reverse T3
+    - Anti-Thyroglobulin Antibodies
+    - Thyroglobulin Antibodies
+  Metabolic Hormones:
+    - Cortisol
+    - Insulin
+    - Insulin-Like Growth Factor I
+    - Z score
+  Reproductive Hormones:
+    - Estradiol
+    - FSH
+    - Luteinizing Hormone (LH)
+    - Free Testosterone
+    - Testosterone (total)
+    - DHEA-S
+    - SHBG
+    - Prolactin
+
+Liver Health:
+  Liver Enzymes and Function Tests:
+    - ALT / SGPT
+    - ALP
+    - AST / SGOT
+    - Bilirubin (direct)
+    - Bilirubin (total)
+    - Albumin
+    - Total Protein
+    - Globulin
+    - A/G Ratio
+
+Kidney Health:
+  Kidney Function:
+    - Creatinine
+    - eGFR
+    - eGFR (African American ethnicity)
+    - BUN
+    - Albumin
+
+Electrolytes:
+  Electrolytes:
+    - Sodium
+    - Potassium
+    - Chloride
+    - CO2
+    - Calcium
+    - Phosphorus
+    - Anion Gap
+
+Bone Health:
+  Bone:
+    - Calcium
+    - ALP
+    - PTH
+    - Phosphorus
+
+Blood Health:
+  Platelets:
+    - Platelet Count
+    - Mean Platelet Volume (MPV)
+  White Blood Cells:
+    - White Blood Cell Count
+    - Neutrophil Count (ANC)
+    - "% Neutrophil"
+    - Lymphocyte Count (absolute)
+    - "% Lymphocytes"
+    - Monocytes (absolute)
+    - "% Monocytes"
+    - Eosinophil (absolute)
+    - "% Eosinophils"
+    - Basophil (absolute)
+    - "% Basophils"
+    - Immature Granulocytes
+    - Immature Granulocytes (Absolute)
+    - Nucleated Red Blood Cells
+    - Absolute Nucleated Red Blood Cells
+  Red Blood Cells:
+    - Hematocrit
+    - RBC
+    - Hemoglobin
+    - MCV
+    - MCH
+    - MCHC
+    - RDW
+  Iron:
+    - Iron (serum)
+    - Ferritin
+    - Transferrin Saturation %
+    - Total Iron Binding Capacity
+    - Unsaturated Iron-Binding Capacity
+    - Iron Saturation
+  Antibodies:
+    - IgA
+
+Vitamins & Minerals:
+  Vitamins:
+    - Folate
+    - 25-Hydroxy Vitamin D
+    - 25-hydroxy Vitamin D2
+    - 25-hydroxy Vitamin D3
+    - Vitamin B12
+  Minerals:
+    - RBC Magnesium
+    - Phosphorus
+    - Calcium
+
+Vital Signs:
+  Weight:
+    - Weight
+    - Body Mass Index

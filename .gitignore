@@ -1,9 +1,10 @@
 # Misc. Mac filesystem
 .DS_Store
 
-# Raw and processed data - Ignore all .json and .csv files
+# Raw and processed data - Ignore all .json, .csv and .html files
 *.json
 *.csv
+*.html
 
 # Allow .json and .csv files in the "test" directory
 !/test/*.json

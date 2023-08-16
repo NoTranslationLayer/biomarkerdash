@@ -10,6 +10,7 @@ from biomarkerdash.constants import (
     COLUMN_VALUE,
 )
 
+
 def parse_ref_range(range_str: str) -> Tuple[Optional[float], Optional[float]]:
     """Parse a reference range string and return a tuple (min_val, max_val)."""
 
@@ -96,6 +97,7 @@ def parse_wellnessfx_ref_ranges(
 
     return biomarker_to_range
 
+
 def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
     """
     Processes a CSV file and returns a dictionary of biomarkers.
@@ -107,6 +109,9 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
     - Dictionary mapping marker names to Biomarker objects.
     """
     data = pd.read_csv(csv_path)
+
+    # Trim unnecessary whitespace in column names
+    data.columns = [col.strip() for col in data.columns]
 
     # Extract the reference ranges
     biomarker_to_range = parse_wellnessfx_ref_ranges(data)
@@ -126,3 +131,33 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
 
     print(f"Loaded {len(biomarkers.keys())} biomarkers")
     return biomarkers
+
+
+def generate_filename(marker_name: str) -> str:
+    """
+    Generate an appropriate filename by removing or replacing certain
+    characters.
+
+    Args:
+    - marker_name (str): The original marker name.
+
+    Returns:
+    - str: A sanitized filename.
+    """
+
+    # Define characters to be replaced and their replacements
+    replacements = {
+        " ": "_",  # replace spaces with underscores
+        "%": "pct",  # replace '%' with 'pct'
+    }
+
+    # Define characters to be removed
+    remove_chars = "(),:/"
+
+    # Create a translation table
+    trans = str.maketrans(replacements, remove_chars)
+
+    # Apply replacements and removals
+    marker_name = marker_name.translate(trans)
+
+    return marker_name + ".html"

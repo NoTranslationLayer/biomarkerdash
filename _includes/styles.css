@@ -1,0 +1,30 @@
+body {
+    font-family: "Montserrat", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #555;
+    padding-left: 100px;
+    padding-right: 100px;
+
+}
+
+h2 {
+    border-bottom: 1px solid lightgrey;
+    padding-bottom: 10px;
+    font-weight: 400;
+
+}
+
+h2 {
+    font-weight: 700;
+
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: underline;
+}

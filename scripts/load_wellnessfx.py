@@ -3,15 +3,8 @@
 import pandas as pd
 import sys
 import biomarkerdash.utils as util
-
-
-def process_csv(csv_path: str) -> None:
-    # Load the CSV data
-    data = pd.read_csv(csv_path)
-
-    # Extract the reference ranges
-    biomarker_to_range = util.parse_wellnessfx_ref_ranges(data)
-    print("Processing complete!")
+import biomarkerdash.biomarker as bm
+from typing import List, Dict, Optional, Tuple
 
 
 if __name__ == "__main__":
@@ -20,4 +13,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     csv_path: str = sys.argv[1]
-    process_csv(csv_path)
+    biomarkers = util.load_wellnessfx_biomarkers(csv_path)

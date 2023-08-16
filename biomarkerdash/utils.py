@@ -3,6 +3,12 @@ import pandas as pd
 from typing import Dict, Tuple, Optional
 
 import biomarkerdash.biomarker as bm
+from biomarkerdash.constants import (
+    COLUMN_MARKER_NAME,
+    COLUMN_REFERENCE_RANGE,
+    COLUMN_DRAW_DATE,
+    COLUMN_VALUE,
+)
 
 def parse_ref_range(range_str: str) -> Tuple[Optional[float], Optional[float]]:
     """Parse a reference range string and return a tuple (min_val, max_val)."""
@@ -52,8 +58,8 @@ def parse_wellnessfx_ref_ranges(
     biomarker_to_range: Dict[str, Tuple[Optional[float], Optional[float]]] = {}
 
     for _, row in data.iterrows():
-        marker_name: str = row["Marker Name"]
-        ref_range: str = row["Reference Range"]
+        marker_name: str = row[COLUMN_MARKER_NAME]
+        ref_range: str = row[COLUMN_REFERENCE_RANGE]
         if str(ref_range).strip().lower() == "nan":
             ref_range = ""
 
@@ -71,7 +77,7 @@ def parse_wellnessfx_ref_ranges(
                 if existing_min_val != min_val or existing_max_val != max_val:
                     print(
                         f"Warning: Different reference range for {marker_name} "
-                        f"on {row['Draw Date']}. "
+                        f"on {row[COLUMN_DRAW_DATE]}. "
                         f"Existing: {existing_min_val}-{existing_max_val}, "
                         f"New: {min_val}-{max_val}"
                         # f"\nCurrent ref range str: {ref_range}"
@@ -83,7 +89,7 @@ def parse_wellnessfx_ref_ranges(
             # couldn't parse min_val/max_val value
             print(
                 f"Error parsing reference range for {marker_name} on "
-                f"{row['Draw Date']} from '{ref_range}'"
+                f"{row[COLUMN_DRAW_DATE]} from '{ref_range}'"
                 # f"\nmin_val: {min_val}"
                 # f"\nmax_val: {max_val}"
             )
@@ -108,14 +114,14 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
     biomarkers: Dict[str, bm.Biomarker] = {}
 
     for _, row in data.iterrows():
-        marker_name = row["Marker Name"]
+        marker_name = row[COLUMN_MARKER_NAME]
 
         if marker_name not in biomarkers:
             ref_range = biomarker_to_range.get(marker_name, (None, None))
             biomarkers[marker_name] = bm.parse_row_to_biomarker(row, ref_range)
 
         biomarkers[marker_name].add_history_entry(
-            row["Draw Date"], row["Value"]
+            row[COLUMN_DRAW_DATE], row[COLUMN_VALUE]
         )
 
     print(f"Loaded {len(biomarkers.keys())} biomarkers")

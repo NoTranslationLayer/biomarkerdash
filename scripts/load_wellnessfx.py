@@ -28,8 +28,9 @@ if __name__ == "__main__":
     biomarkers = util.load_wellnessfx_biomarkers(csv_path)
 
     plot_output_dir = "_includes"
+    category_page_output_dir = "_categories"
     os.makedirs(plot_output_dir, exist_ok=True)
-
+    os.makedirs(category_page_output_dir, exist_ok=True)
     categories = load_categories("categories.yaml")
 
     output_files = []
@@ -60,7 +61,7 @@ if __name__ == "__main__":
                     with open(filename, "r", encoding="utf-8") as f:
                         html_content.append(f.read())
 
-        output_file = htm.combine_html_files(category, html_content, ".")
+        output_file = htm.combine_html_files(category, html_content)
         output_files.append(output_file)
 
     # Now that all category files have been generated, create the TOC
@@ -75,11 +76,19 @@ if __name__ == "__main__":
             f.seek(0, 0)
             f.write(header + content)
 
-    index_page_filename = "dashboard.html"
-    index_page_html_content = header
+    index_page_filename = "BiomarkerDashboard.html"
+    index_page_html_content = htm.create_header_toc(
+        {
+            cat: os.path.join(
+                category_page_output_dir, util.generate_filename(cat)
+            )
+            for cat in categories.keys()
+        }
+    )
+
     index_page_html_content += "</body></html>"
 
     with open(index_page_filename, "w", encoding="utf-8") as f:
         f.write(index_page_html_content)
 
-    print("All plots combined into dashboard.html.")
+    print("Generated BiomarkerDashboard.html")

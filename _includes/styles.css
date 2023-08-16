@@ -1,0 +1,21 @@
+body {
+    font-family: "proxima-nova-soft", "proxima-nova", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #555;
+}
+
+h2 {
+    border-bottom: 1px solid lightgrey;
+    padding-bottom: 10px;
+}
+
+/* Added these styles for links */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: underline;
+}

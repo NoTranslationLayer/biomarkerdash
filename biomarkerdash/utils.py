@@ -144,20 +144,17 @@ def generate_filename(marker_name: str) -> str:
 
     # Define characters to be replaced and their replacements
     replacements = {
-        " ": "_",  # replace spaces with underscores
+        " ": "_",    # replace spaces with underscores
         "%": "pct",  # replace '%' with 'pct'
     }
 
-    # Characters to be removed
-    remove_chars = set("(),:/")
+    # Define characters to be removed
+    remove_chars = "(),:/"
 
-    # Apply replacements
-    for old_char, new_char in replacements.items():
-        marker_name = marker_name.replace(old_char, new_char)
+    # Create a translation table
+    trans = str.maketrans(replacements, remove_chars)
 
-    # Remove unwanted characters
-    marker_name = "".join(
-        [char for char in marker_name if char not in remove_chars]
-    )
+    # Apply replacements and removals
+    marker_name = marker_name.translate(trans)
 
     return marker_name + ".html"

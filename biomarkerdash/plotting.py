@@ -45,7 +45,7 @@ def plot_history(marker: bm.Biomarker, save_to: str) -> None:
     try:
         values = np.array(values, dtype=float)
     except ValueError:
-        print(f"Failed to extract numberical values for {marker.name}")
+        print(f"Failed to extract numerical values for {marker.name}")
         return
 
     # Get colors based on reference range

@@ -1,5 +1,5 @@
 # filename: constants.py
-# Constants for loading and dislaying data
+# Constants for loading and displaying data
 
 # Copyright (c) 2023, No Translation Layer LLC
 # All rights reserved.

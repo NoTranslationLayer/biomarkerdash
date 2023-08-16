@@ -61,6 +61,7 @@ def create_header_toc(
     <!DOCTYPE html>
     <html lang="en">
     <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
     """
     header_html += css_content

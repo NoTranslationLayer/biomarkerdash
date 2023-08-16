@@ -128,23 +128,34 @@ def plot_history(marker: bm.Biomarker, save_to: str) -> None:
             )
         )
 
+    font_family = dict(family="Montserrat, Helvetica, Arial, sans-serif")
+
     fig.update_layout(
         title=go.layout.Title(
             text=f"{marker.name} <br><sup>{marker.description}</sup>",
             xref="paper",
             x=0,
+            font={**font_family, "size": 18}
         ),
         title_x=0.5,
         title_y=0.93,
         title_xanchor="center",
         title_yanchor="top",
         xaxis_title="Date",
+        xaxis=dict(
+            title_font={**font_family, "size": 14},
+            tickfont={**font_family, "size": 12}
+        ),
         yaxis_title=f"Value ({marker.unit})",
+        yaxis=dict(
+            title_font={**font_family, "size": 14},
+            tickfont={**font_family, "size": 12}
+        ),
         shapes=shapes,
         yaxis_range=y_range,
         showlegend=False,
         plot_bgcolor="rgba(0,0,0,0.04)",
+        font={**font_family, "size": 12}
     )
 
-    # fig.show()
     pyo.plot(fig, filename=save_to, auto_open=False)

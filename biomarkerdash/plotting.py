@@ -4,6 +4,12 @@ import plotly.offline as pyo
 from typing import List, Dict, Optional, Tuple
 import biomarkerdash.biomarker as bm
 
+from biomarkerdash.constants import (
+    COLOR_RED,
+    COLOR_GREEN,
+    COLOR_LINE,
+    COLOR_BG_OUTSIDE_REF_RANGE,
+)
 
 def determine_color(
     value: float, ref_range: Tuple[Optional[float], Optional[float]]
@@ -21,14 +27,12 @@ def determine_color(
     range.
     """
     min_val, max_val = ref_range
-    green = "rgb(82, 182, 2)"
-    red = "rgb(236, 2, 0)"
     if min_val is not None and max_val is not None:
-        return green if min_val <= value <= max_val else red
+        return COLOR_GREEN if min_val <= value <= max_val else COLOR_RED
     elif min_val is not None:
-        return green if value >= min_val else red
+        return COLOR_GREEN if value >= min_val else COLOR_RED
     elif max_val is not None:
-        return green if value <= max_val else red
+        return COLOR_GREEN if value <= max_val else COLOR_RED
     else:  # No reference range present
         return "grey"
 
@@ -59,7 +63,7 @@ def plot_history(marker: bm.Biomarker, save_to: str) -> None:
             x=dates,
             y=values,
             mode="lines",
-            line=dict(color="rgba(0, 0, 0, 0.15)"),
+            line=dict(color=COLOR_LINE),
         )
     )
 
@@ -107,7 +111,7 @@ def plot_history(marker: bm.Biomarker, save_to: str) -> None:
                 x1=1,
                 y0=y_range[0],
                 y1=min_val,
-                fillcolor="rgba(236,2,0,0.2)",
+                fillcolor=COLOR_BG_OUTSIDE_REF_RANGE,
                 layer="below",
                 line=dict(width=0),
             )
@@ -122,7 +126,7 @@ def plot_history(marker: bm.Biomarker, save_to: str) -> None:
                 x1=1,
                 y0=max_val,
                 y1=y_range[1],
-                fillcolor="rgba(236,2,0,0.2)",
+                fillcolor=COLOR_BG_OUTSIDE_REF_RANGE,
                 layer="below",
                 line=dict(width=0),
             )

@@ -183,13 +183,13 @@ def generate_filename(marker_name: str) -> str:
         "%": "pct",  # replace '%' with 'pct'
     }
 
-    # Define characters to be removed
+    # Characters to be removed
     remove_chars = "(),:/"
 
-    # Create a translation table
-    trans = str.maketrans(replacements, remove_chars)
+    # Combine replacements and removals into one dictionary
+    translation_dict = {**replacements, **{char: None for char in remove_chars}}
 
-    # Apply replacements and removals
-    marker_name = marker_name.translate(trans)
+    # Apply the translation
+    marker_name = marker_name.translate(str.maketrans(translation_dict))
 
     return marker_name + ".html"

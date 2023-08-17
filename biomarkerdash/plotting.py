@@ -33,7 +33,8 @@
 import numpy as np
 import plotly.graph_objects as go
 import plotly.offline as pyo
-from typing import List, Dict, Optional, Tuple
+from typing import Optional, Tuple
+
 import biomarkerdash.biomarker as bm
 
 from biomarkerdash.constants import (

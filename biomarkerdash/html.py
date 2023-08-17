@@ -31,10 +31,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import os
+from typing import List, Dict
+
 import biomarkerdash.utils as util
 from biomarkerdash.constants import FOOTER_HTML
-from typing import List, Dict, Optional, Tuple
-
 
 def combine_html_files(
     category: str,

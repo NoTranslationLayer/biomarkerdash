@@ -1,7 +1,8 @@
 import numpy as np
 import plotly.graph_objects as go
 import plotly.offline as pyo
-from typing import List, Dict, Optional, Tuple
+from typing import Optional, Tuple
+
 import biomarkerdash.biomarker as bm
 
 from biomarkerdash.constants import (
@@ -10,6 +11,7 @@ from biomarkerdash.constants import (
     COLOR_LINE,
     COLOR_BG_OUTSIDE_REF_RANGE,
 )
+
 
 def determine_color(
     value: float, ref_range: Tuple[Optional[float], Optional[float]]
@@ -139,7 +141,7 @@ def plot_history(marker: bm.Biomarker, save_to: str) -> None:
             text=f"{marker.name} <br><sup>{marker.description}</sup>",
             xref="paper",
             x=0,
-            font={**font_family, "size": 18}
+            font={**font_family, "size": 18},
         ),
         title_x=0.5,
         title_y=0.93,
@@ -148,18 +150,18 @@ def plot_history(marker: bm.Biomarker, save_to: str) -> None:
         xaxis_title="Date",
         xaxis=dict(
             title_font={**font_family, "size": 14},
-            tickfont={**font_family, "size": 12}
+            tickfont={**font_family, "size": 12},
         ),
         yaxis_title=f"Value ({marker.unit})",
         yaxis=dict(
             title_font={**font_family, "size": 14},
-            tickfont={**font_family, "size": 12}
+            tickfont={**font_family, "size": 12},
         ),
         shapes=shapes,
         yaxis_range=y_range,
         showlegend=False,
         plot_bgcolor="rgba(0,0,0,0.04)",
-        font={**font_family, "size": 12}
+        font={**font_family, "size": 12},
     )
 
     pyo.plot(fig, filename=save_to, auto_open=False)

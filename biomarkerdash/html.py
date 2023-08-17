@@ -36,6 +36,7 @@ from typing import List, Dict
 import biomarkerdash.utils as util
 from biomarkerdash.constants import FOOTER_HTML
 
+
 def combine_html_files(
     category: str,
     plot_html_list: List[str],
@@ -78,7 +79,9 @@ def load_css(filepath: str) -> str:
 
 
 def create_header_toc(
-    category_files: Dict[str, str], css_filepath: str
+    category_files: Dict[str, str],
+    css_filepath: str,
+    current_category: str = None,
 ) -> str:
     """
     Generate an HTML header and table of contents with links to category pages.
@@ -88,6 +91,8 @@ def create_header_toc(
         corresponding file names.
         css_filepath (str): The file path to the desired CSS
         stylesheet.
+        current_category (str): Name of the current category. If provided, this
+        category will be bold in the TOC to indicate it's the current page.
 
     Returns:
         str: HTML content with headers and table of contents.
@@ -117,7 +122,10 @@ def create_header_toc(
     # Sidebar TOC
     sidebar_html = '<div class="sidebar"><h2>Biomarker Dashboard</h2><ul>'
     for category, filename in category_files.items():
-        sidebar_html += f'<li><a href="{filename}">{category}</a></li>'
+        if category == current_category:
+            sidebar_html += f'<li><a href="{filename}" style="font-weight: bold;">{category}</a></li>'
+        else:
+            sidebar_html += f'<li><a href="{filename}">{category}</a></li>'
     sidebar_html += "</ul></div>"
 
     # Main Content

@@ -4,6 +4,12 @@ Simple dashboard to visualize trends in bloodwork biomarkers.
 ## Introduction
 This Biomarker Dashboard provides an easy-to-use interface to visualize and understand trends in your bloodwork biomarkers. Originally designed to import and visualize data from WellnessFX, this dashboard is a vital tool for those looking to transition their data elsewhere due to WellnessFX's shutdown. However, it's flexible enough to be used with any dataset following the prescribed format.
 
+![Example Biomarker Dashboard page](./assets/dashboard_example.png)
+
+The dashboard is interactive and allows you to examine individual data points by mousing over them to get details, as well as adjusting the zoom of the plot. 
+
+
+
 ## Data Export from WellnessFX
 If you've been using WellnessFX and want to migrate your data:
 

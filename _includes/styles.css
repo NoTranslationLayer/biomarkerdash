@@ -3,7 +3,6 @@ body {
     font-weight: 500;
     line-height: 1.2;
     color: #555;
-    padding-left: 100px;
     padding-right: 100px;
 
 }
@@ -27,4 +26,20 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.container {
+    display: flex;
+}
+.sidebar {
+    width: fit-content; /* adjust width based on content */
+    max-width: 300px; /* maximum width of the sidebar, adjust if needed */
+    padding: 1em; /* some space inside the sidebar */
+    background-color: #f5f5f5; /* light gray background */
+}
+.main-content {
+    margin-left: 20px; /* space between sidebar and main content, adjust as desired */
+    flex: 1; /* this makes the main content take the rest of the available space */
+    padding: 1em; /* some space inside the main content */
+    background-color: white; /* white background for main content */
 }

@@ -111,12 +111,18 @@ def create_header_toc(
         <title>Biomarker Dashboard</title>
     </head>
     <body>
+    <div class="container">
     """
-    header_html += "<h1>Biomarker Dashboard</h1><ul>"
 
+    # Sidebar TOC
+    sidebar_html = '<div class="sidebar"><h2>Biomarker Dashboard</h2><ul>'
     for category, filename in category_files.items():
-        header_html += f'<li><a href="{filename}">{category}</a></li>'
+        sidebar_html += f'<li><a href="{filename}">{category}</a></li>'
+    sidebar_html += "</ul></div>"
 
-    header_html += "</ul><hr>"
+    # Main Content
+    main_content_html = '<div class="main-content">'
 
-    return header_html
+    final_html = header_html + sidebar_html + main_content_html
+
+    return final_html

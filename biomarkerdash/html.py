@@ -78,7 +78,7 @@ def load_css(filepath: str) -> str:
 
 
 def create_header_toc(
-    category_files: Dict[str, str], css_filepath: str = "_includes/styles.css"
+    category_files: Dict[str, str], css_filepath: str
 ) -> str:
     """
     Generate an HTML header and table of contents with links to category pages.
@@ -86,8 +86,8 @@ def create_header_toc(
     Args:
         category_files (Dict[str, str]): A mapping of category names to their
         corresponding file names.
-        css_filepath (str, optional): The file path to the desired CSS
-        stylesheet. Defaults to "_includes/styles.css".
+        css_filepath (str): The file path to the desired CSS
+        stylesheet.
 
     Returns:
         str: HTML content with headers and table of contents.
@@ -111,12 +111,18 @@ def create_header_toc(
         <title>Biomarker Dashboard</title>
     </head>
     <body>
+    <div class="container">
     """
-    header_html += "<h1>Biomarker Dashboard</h1><ul>"
 
+    # Sidebar TOC
+    sidebar_html = '<div class="sidebar"><h2>Biomarker Dashboard</h2><ul>'
     for category, filename in category_files.items():
-        header_html += f'<li><a href="{filename}">{category}</a></li>'
+        sidebar_html += f'<li><a href="{filename}">{category}</a></li>'
+    sidebar_html += "</ul></div>"
 
-    header_html += "</ul><hr>"
+    # Main Content
+    main_content_html = '<div class="main-content">'
 
-    return header_html
+    final_html = header_html + sidebar_html + main_content_html
+
+    return final_html

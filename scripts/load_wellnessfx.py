@@ -46,6 +46,7 @@ from biomarkerdash.constants import FOOTER_HTML
 
 def load_categories(filename: str) -> Dict:
     """Load biomarker categories from a YAML file."""
+
     with open(filename, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
@@ -58,11 +59,20 @@ if __name__ == "__main__":
     csv_path: str = sys.argv[1]
     biomarkers = util.load_wellnessfx_biomarkers(csv_path)
 
-    plot_output_dir = "_includes"
-    category_page_output_dir = "_categories"
+    # Get the current script directory and navigate one level up
+    # to preserve the correct behavior regardless of where the script is called from
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
+
+    plot_output_dir = os.path.join(parent_dir, "_includes")
+    category_page_output_dir = os.path.join(parent_dir, "_categories")
     os.makedirs(plot_output_dir, exist_ok=True)
     os.makedirs(category_page_output_dir, exist_ok=True)
-    categories = load_categories("categories.yaml")
+
+    categories_filename = "categories.yaml"
+    categories_filepath = os.path.join(parent_dir, categories_filename)
+
+    categories = load_categories(categories_filepath)
 
     output_files = []
 
@@ -96,8 +106,10 @@ if __name__ == "__main__":
         output_files.append(output_file)
 
     # Now that all category files have been generated, create the TOC
+    css_filepath = os.path.join(parent_dir, "_includes/styles.css")
     header = htm.create_header_toc(
-        {cat: util.generate_filename(cat) for cat in categories.keys()}
+        {cat: util.generate_filename(cat) for cat in categories.keys()},
+        css_filepath
     )
 
     # Prepend TOC to each category file
@@ -108,13 +120,15 @@ if __name__ == "__main__":
             f.write(header + content)
 
     index_page_filename = "BiomarkerDashboard.html"
+    index_page_filepath = os.path.join(parent_dir, index_page_filename)
     index_page_html_content = htm.create_header_toc(
         {
             cat: os.path.join(
                 category_page_output_dir, util.generate_filename(cat)
             )
             for cat in categories.keys()
-        }
+        },
+        css_filepath
     )
 
     index_page_html_content += FOOTER_HTML

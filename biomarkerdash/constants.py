@@ -47,6 +47,7 @@ COLOR_BG_OUTSIDE_REF_RANGE = "rgba(236,2,0,0.2)"
 # HTML
 FOOTER_HTML = """
 <div style="text-align: center; margin-top: 50px; font-size: 14px;">
-    &copy; No Translation Layer LLC. All rights reserved.
+    &copy; <a href="http://ntl.ai/">No Translation Layer LLC</a>. 
+    All rights reserved.
 </div></body></html>"
 """

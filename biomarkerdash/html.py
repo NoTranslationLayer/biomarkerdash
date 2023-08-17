@@ -78,7 +78,7 @@ def load_css(filepath: str) -> str:
 
 
 def create_header_toc(
-    category_files: Dict[str, str], css_filepath: str = "_includes/styles.css"
+    category_files: Dict[str, str], css_filepath: str
 ) -> str:
     """
     Generate an HTML header and table of contents with links to category pages.
@@ -86,8 +86,8 @@ def create_header_toc(
     Args:
         category_files (Dict[str, str]): A mapping of category names to their
         corresponding file names.
-        css_filepath (str, optional): The file path to the desired CSS
-        stylesheet. Defaults to "_includes/styles.css".
+        css_filepath (str): The file path to the desired CSS
+        stylesheet.
 
     Returns:
         str: HTML content with headers and table of contents.

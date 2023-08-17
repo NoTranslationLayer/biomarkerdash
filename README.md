@@ -46,10 +46,8 @@ git clone https://github.com/NoTranslationLayer/biomarkerdash
 cd biomarkerdash
 pip install .
 cd scripts
-./load_wellnessfx.py test_result_export.csv
+./load_wellnessfx.py <path/to/test_result_export.csv>
 ```
-
-If the CSV file was downloaded to a different directory, replace `test_result_export.csv` above with the full path to the CSV file.
 
 The script will generate a file named `BiomarkerDashboard.html` in the top level folder of the cloned repository. Open the file in any web browser to visualize the exported data.
 

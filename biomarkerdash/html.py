@@ -1,7 +1,6 @@
 import os
 import biomarkerdash.utils as util
-from typing import List, Dict, Optional, Tuple
-
+from typing import List, Dict
 
 def combine_html_files(
     category: str,

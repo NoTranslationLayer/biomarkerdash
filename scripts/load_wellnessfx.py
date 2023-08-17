@@ -41,7 +41,7 @@ from typing import Dict
 import biomarkerdash.utils as util
 import biomarkerdash.plotting as plot
 import biomarkerdash.html as htm
-from biomarkerdash.constants import FOOTER_HTML
+from biomarkerdash.constants import FOOTER_HTML, INDEX_PAGE_CATEGORY
 
 
 def load_categories(filename: str) -> Dict:
@@ -53,14 +53,16 @@ def load_categories(filename: str) -> Dict:
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 load_wellnessfx.py path_to_csv_file")
+        print(
+            "Usage: python3 load_wellnessfx.py <path/to/test_result_export.csv>"
+        )
         sys.exit(1)
 
     csv_path: str = sys.argv[1]
     biomarkers = util.load_wellnessfx_biomarkers(csv_path)
 
-    # Get the current script directory and navigate one level up
-    # to preserve the correct behavior regardless of where the script is called from
+    # Get the current script directory and navigate one level up to preserve
+    # the correct behavior regardless of where the script is called from
     script_dir = os.path.dirname(os.path.abspath(__file__))
     parent_dir = os.path.dirname(script_dir)
 
@@ -71,45 +73,41 @@ if __name__ == "__main__":
 
     categories_filename = "categories.yaml"
     categories_filepath = os.path.join(parent_dir, categories_filename)
-
     categories = load_categories(categories_filepath)
 
     output_files = []
 
-    for category, subcategories in categories.items():
-        html_content = []
-        html_content.append(f'<h2 id="{category}">{category}</h2>')
+    # Storage for content to be used in the index page
+    index_page_main_content = ""
 
+    for category, subcategories in categories.items():
+        html_content = [f'<h2 id="{category}">{category}</h2>']
         for subcategory, biomarkers_list in subcategories.items():
             html_content.append(f'<h3 id="{subcategory}">{subcategory}</h3>')
-
-            # Generate plots for biomarkers in the subcategory
             for marker_name in biomarkers_list:
                 marker_obj = biomarkers.get(marker_name)
-                if marker_obj:  # Check if biomarker data exists
+                if marker_obj:
                     filename = os.path.join(
                         plot_output_dir, util.generate_filename(marker_name)
                     )
-
-                    # Save the individual plot
                     plot.plot_history(marker_obj, save_to=filename)
                     print(f"Plot for {marker_name} saved to {filename}.")
-
-                    # Read the generated HTML file and store its content
-                    if not os.path.exists(filename):
-                        print(f"{filename} not found, skipping")
-                        continue
-                    with open(filename, "r", encoding="utf-8") as f:
-                        html_content.append(f.read())
+                    if os.path.exists(filename):
+                        with open(filename, "r", encoding="utf-8") as f:
+                            marker_plot_html = f.read()
+                            html_content.append(marker_plot_html)
 
         output_file = htm.combine_html_files(category, html_content)
         output_files.append(output_file)
+
+        if category == INDEX_PAGE_CATEGORY:
+            index_page_main_content = "".join(html_content)
 
     # Now that all category files have been generated, create the TOC
     css_filepath = os.path.join(parent_dir, "_includes/styles.css")
     header = htm.create_header_toc(
         {cat: util.generate_filename(cat) for cat in categories.keys()},
-        css_filepath
+        css_filepath,
     )
 
     # Prepend TOC to each category file
@@ -119,21 +117,24 @@ if __name__ == "__main__":
             f.seek(0, 0)
             f.write(header + content)
 
+    # Create the index page
     index_page_filename = "BiomarkerDashboard.html"
     index_page_filepath = os.path.join(parent_dir, index_page_filename)
-    index_page_html_content = htm.create_header_toc(
-        {
-            cat: os.path.join(
-                category_page_output_dir, util.generate_filename(cat)
-            )
-            for cat in categories.keys()
-        },
-        css_filepath
+    index_page_html_content = (
+        htm.create_header_toc(
+            {
+                cat: os.path.join(
+                    category_page_output_dir, util.generate_filename(cat)
+                )
+                for cat in categories.keys()
+            },
+            css_filepath,
+        )
+        + index_page_main_content
+        + FOOTER_HTML
     )
 
-    index_page_html_content += FOOTER_HTML
-
-    with open(index_page_filename, "w", encoding="utf-8") as f:
+    with open(index_page_filepath, "w", encoding="utf-8") as f:
         f.write(index_page_html_content)
 
     print("Generated BiomarkerDashboard.html")

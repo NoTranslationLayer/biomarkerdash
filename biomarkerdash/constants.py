@@ -51,3 +51,4 @@ FOOTER_HTML = """
     All rights reserved.
 </div></body></html>"
 """
+INDEX_PAGE_CATEGORY = "Cardiovascular Health"

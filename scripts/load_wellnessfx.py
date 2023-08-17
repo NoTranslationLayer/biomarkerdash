@@ -98,20 +98,22 @@ if __name__ == "__main__":
                             html_content.append(marker_plot_html)
 
         output_file = htm.combine_html_files(category, html_content)
-        output_files.append(output_file)
+        output_files.append((category, output_file))
 
         if category == INDEX_PAGE_CATEGORY:
             index_page_main_content = "".join(html_content)
 
-    # Now that all category files have been generated, create the TOC
     css_filepath = os.path.join(parent_dir, "_includes/styles.css")
-    header = htm.create_header_toc(
-        {cat: util.generate_filename(cat) for cat in categories.keys()},
-        css_filepath,
-    )
 
-    # Prepend TOC to each category file
-    for output_file in output_files:
+    # Now that all category files have been generated, create the TOC
+    # and prepend to each category file
+    for category, output_file in output_files:
+
+        header = htm.create_header_toc(
+            {cat: util.generate_filename(cat) for cat in categories.keys()},
+            css_filepath,
+            current_category=category
+        )
         with open(output_file, "r+", encoding="utf-8") as f:
             content = f.read()
             f.seek(0, 0)
@@ -129,6 +131,7 @@ if __name__ == "__main__":
                 for cat in categories.keys()
             },
             css_filepath,
+            current_category=INDEX_PAGE_CATEGORY
         )
         + index_page_main_content
         + FOOTER_HTML

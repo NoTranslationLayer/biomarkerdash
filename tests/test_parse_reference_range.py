@@ -100,6 +100,38 @@ class TestParseWellnessFxRefRanges(unittest.TestCase):
             "Test3": (60.0, None),
         }
 
+        self.data_correction_needed = pd.DataFrame(
+            {
+                "Marker Name": [
+                    "Lymphocyte Count (absolute)",
+                    "Monocytes (absolute)",
+                    "Neutrophil Count (ANC)",
+                    "Basophil (absolute)",
+                    "Eosinophil (absolute)",
+                    "Platelet Count",
+                ],
+                "Draw Date": ["10/25/13"] * 6,
+                "Reference Range": [
+                    "850.0-3900.0",
+                    "200.0-950.0",
+                    "1500.0-7800.0",
+                    "0.0-200.0",
+                    "15.0-500.0",
+                    "140-400",
+                ],
+                "Units": ["x10E3/μL"] * 6,
+            }
+        )
+
+        self.expected_correction_needed = {
+            "Lymphocyte Count (absolute)": (0.85, 3.9),
+            "Monocytes (absolute)": (0.2, 0.95),
+            "Neutrophil Count (ANC)": (1.5, 7.8),
+            "Basophil (absolute)": (0.0, 0.2),
+            "Eosinophil (absolute)": (0.015, 0.5),
+            "Platelet Count": (140, 400),  # Ensure it's not scaled
+        }
+
     def test_standard_format(self):
         # Testing the function with standard reference range formats
         result = util.parse_wellnessfx_ref_ranges(self.data_standard_format)
@@ -112,6 +144,12 @@ class TestParseWellnessFxRefRanges(unittest.TestCase):
         result = util.parse_wellnessfx_ref_ranges(self.data_error_format)
         self.assertTrue("TestError1" not in result)
         self.assertTrue("TestError2" not in result)
+
+    def test_correction_needed(self):
+        # Testing the function for correcting reference ranges for blood cell
+        # counts
+        result = util.parse_wellnessfx_ref_ranges(self.data_correction_needed)
+        self.assertEqual(result, self.expected_correction_needed)
 
 
 if __name__ == "__main__":

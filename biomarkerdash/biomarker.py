@@ -79,8 +79,6 @@ class Biomarker:
         draw_date = datetime.strptime(draw_date_str, "%m/%d/%y")
         if str(unit) != "nan" and unit != self.unit:
             print(f"\nunit for {self.name} changed from {self.unit} to {unit}\n")
-            print("Unicode for self.unit:", [ord(c) for c in self.unit])
-            print("Unicode for unit:", [ord(c) for c in unit])
         self.history.loc[len(self.history)] = [draw_date, value]
 
 

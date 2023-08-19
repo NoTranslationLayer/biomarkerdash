@@ -93,6 +93,7 @@ def parse_wellnessfx_ref_ranges(
 
     for _, row in data.iterrows():
         marker_name: str = row[COLUMN_MARKER_NAME]
+        unit: str = row[COLUMN_UNIT]
         ref_range: str = row[COLUMN_REFERENCE_RANGE]
         if str(ref_range).strip().lower() == "nan":
             ref_range = ""
@@ -102,6 +103,25 @@ def parse_wellnessfx_ref_ranges(
             continue
 
         min_val, max_val = parse_ref_range(ref_range)
+
+        # For absolute white blood cell counts, the unit is expressed as x1000
+        # count per microliter, but some of the reference ranges are expressed
+        # in count per microliter (without the x1000 multiplier). Sanity check
+        # for consistency here and update the reference ranges to match if
+        # needed.
+        if str(unit) != "nan" and "x10E3" in unit:
+            if marker_name != "Platelet Count":
+                if max_val is not None and max_val >= 100:
+                    print(
+                        f"Warning: Correcting reference range ({min_val}, "
+                        f"{max_val}) {unit} for {marker_name} to "
+                        f"({min_val / 1000 if min_val is not None else None}, "
+                        f"{max_val / 1000}) {unit} "
+                    )
+                    max_val = max_val / 1000
+                    if min_val is not None:
+                        min_val = min_val / 1000
+
         if min_val is not None or max_val is not None:
             if marker_name in biomarker_to_range:
                 existing_min_val, existing_max_val = biomarker_to_range[
@@ -191,7 +211,10 @@ def generate_filename(marker_name: str) -> str:
     remove_chars = "(),:/"
 
     # Combine replacements and removals into one dictionary
-    translation_dict = {**replacements, **{char: None for char in remove_chars}}
+    translation_dict = {
+        **replacements,
+        **{char: None for char in remove_chars},
+    }
 
     # Apply the translation
     marker_name = marker_name.translate(str.maketrans(translation_dict))

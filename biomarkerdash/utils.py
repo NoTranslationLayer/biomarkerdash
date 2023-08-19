@@ -40,6 +40,7 @@ from biomarkerdash.constants import (
     COLUMN_REFERENCE_RANGE,
     COLUMN_DRAW_DATE,
     COLUMN_VALUE,
+    COLUMN_UNIT,
 )
 
 
@@ -140,10 +141,13 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
     Returns:
     - Dictionary mapping marker names to Biomarker objects.
     """
-    data = pd.read_csv(csv_path)
+    data = pd.read_csv(csv_path, dtype={COLUMN_UNIT: str})
 
     # Trim unnecessary whitespace in column names
     data.columns = [col.strip() for col in data.columns]
+
+    # Replace Unicode 63 (which is "?") with Unicode 956 (which is "µ") for the unit column
+    data[COLUMN_UNIT] = data[COLUMN_UNIT].str.replace(chr(63), chr(956))
 
     # Extract the reference ranges
     biomarker_to_range = parse_wellnessfx_ref_ranges(data)
@@ -158,7 +162,7 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
             biomarkers[marker_name] = bm.parse_row_to_biomarker(row, ref_range)
 
         biomarkers[marker_name].add_history_entry(
-            row[COLUMN_DRAW_DATE], row[COLUMN_VALUE]
+            row[COLUMN_DRAW_DATE], row[COLUMN_VALUE], row[COLUMN_UNIT]
         )
 
     print(f"Loaded {len(biomarkers.keys())} biomarkers")

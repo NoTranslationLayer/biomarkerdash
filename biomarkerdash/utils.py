@@ -40,6 +40,7 @@ from biomarkerdash.constants import (
     COLUMN_REFERENCE_RANGE,
     COLUMN_DRAW_DATE,
     COLUMN_VALUE,
+    COLUMN_UNIT,
 )
 
 
@@ -92,6 +93,7 @@ def parse_wellnessfx_ref_ranges(
 
     for _, row in data.iterrows():
         marker_name: str = row[COLUMN_MARKER_NAME]
+        unit: str = row[COLUMN_UNIT]
         ref_range: str = row[COLUMN_REFERENCE_RANGE]
         if str(ref_range).strip().lower() == "nan":
             ref_range = ""
@@ -101,6 +103,36 @@ def parse_wellnessfx_ref_ranges(
             continue
 
         min_val, max_val = parse_ref_range(ref_range)
+
+        # For absolute white blood cell counts, the unit is expressed as x1000
+        # count per microliter, but some of the reference ranges are expressed
+        # in count per microliter (without the x1000 multiplier). Sanity check
+        # for consistency here and update the reference ranges to match if
+        # needed.
+        # e.g. a (value, unit, ref_range) of:
+        # (0.673, x10E3/uL, 850-3900) would get adjusted to:
+        # (0.673, x10E3/uL, 0.85-3.9)
+        if str(unit) != "nan" and "x10E3" in unit:
+            # This discrepancy is only found in Quest white blood cell counts,
+            # not platelet count, so don't apply the correction for platelet
+            # count
+            if marker_name != "Platelet Count":
+                # Use a hardcoded threshold of 100 to determine whether or not
+                # the scaling needs to be applied, or if the order of magnitude
+                # is already correct. For white blood cell counts expressed in
+                # x10E3/u, the upper limit of the reference range always falls
+                # below 100.
+                if max_val is not None and max_val >= 100:
+                    print(
+                        f"Warning: Correcting reference range ({min_val}, "
+                        f"{max_val}) {unit} for {marker_name} to "
+                        f"({min_val / 1000 if min_val is not None else None}, "
+                        f"{max_val / 1000}) {unit} "
+                    )
+                    max_val = max_val / 1000
+                    if min_val is not None:
+                        min_val = min_val / 1000
+
         if min_val is not None or max_val is not None:
             if marker_name in biomarker_to_range:
                 existing_min_val, existing_max_val = biomarker_to_range[
@@ -140,10 +172,13 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
     Returns:
     - Dictionary mapping marker names to Biomarker objects.
     """
-    data = pd.read_csv(csv_path)
+    data = pd.read_csv(csv_path, dtype={COLUMN_UNIT: str})
 
     # Trim unnecessary whitespace in column names
     data.columns = [col.strip() for col in data.columns]
+
+    # Replace Unicode 63 (which is "?") with Unicode 956 (which is "µ") for the unit column
+    data[COLUMN_UNIT] = data[COLUMN_UNIT].str.replace(chr(63), chr(956))
 
     # Extract the reference ranges
     biomarker_to_range = parse_wellnessfx_ref_ranges(data)
@@ -158,7 +193,7 @@ def load_wellnessfx_biomarkers(csv_path: str) -> Dict[str, bm.Biomarker]:
             biomarkers[marker_name] = bm.parse_row_to_biomarker(row, ref_range)
 
         biomarkers[marker_name].add_history_entry(
-            row[COLUMN_DRAW_DATE], row[COLUMN_VALUE]
+            row[COLUMN_DRAW_DATE], row[COLUMN_VALUE], row[COLUMN_UNIT]
         )
 
     print(f"Loaded {len(biomarkers.keys())} biomarkers")
@@ -187,7 +222,10 @@ def generate_filename(marker_name: str) -> str:
     remove_chars = "(),:/"
 
     # Combine replacements and removals into one dictionary
-    translation_dict = {**replacements, **{char: None for char in remove_chars}}
+    translation_dict = {
+        **replacements,
+        **{char: None for char in remove_chars},
+    }
 
     # Apply the translation
     marker_name = marker_name.translate(str.maketrans(translation_dict))

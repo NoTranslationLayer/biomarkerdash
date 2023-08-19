@@ -73,10 +73,12 @@ class Biomarker:
             columns=[COLUMN_DRAW_DATE, COLUMN_VALUE]
         )
 
-    def add_history_entry(self, draw_date_str: str, value: float):
+    def add_history_entry(self, draw_date_str: str, value: float, unit: str):
         """Add a single history entry to the biomarker."""
         # Parse the date string
         draw_date = datetime.strptime(draw_date_str, "%m/%d/%y")
+        if str(unit) != "nan" and unit != self.unit:
+            print(f"\nunit for {self.name} changed from {self.unit} to {unit}\n")
         self.history.loc[len(self.history)] = [draw_date, value]
 
 

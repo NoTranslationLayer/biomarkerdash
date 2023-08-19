@@ -81,6 +81,7 @@ class TestParseWellnessFxRefRanges(unittest.TestCase):
                 "Marker Name": ["Test1", "Test2", "Test3"],
                 "Draw Date": ["10/25/13", "10/25/13", "10/25/13"],
                 "Reference Range": ["0.2-5.0", "<150", ">60"],
+                "Units": ["mg/dL", "mmol/L", "mg/dL"],
             }
         )
 
@@ -89,6 +90,7 @@ class TestParseWellnessFxRefRanges(unittest.TestCase):
                 "Marker Name": ["TestError1", "TestError2"],
                 "Draw Date": ["10/25/13", "10/25/13"],
                 "Reference Range": ["nan", "unexpected-format"],
+                "Units": ["mg/dL", "mmol/L"],
             }
         )
 

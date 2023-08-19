@@ -109,8 +109,19 @@ def parse_wellnessfx_ref_ranges(
         # in count per microliter (without the x1000 multiplier). Sanity check
         # for consistency here and update the reference ranges to match if
         # needed.
+        # e.g. a (value, unit, ref_range) of:
+        # (0.673, x10E3/uL, 850-3900) would get adjusted to:
+        # (0.673, x10E3/uL, 0.85-3.9)
         if str(unit) != "nan" and "x10E3" in unit:
+            # This discrepancy is only found in Quest white blood cell counts,
+            # not platelet count, so don't apply the correction for platelet
+            # count
             if marker_name != "Platelet Count":
+                # Use a hardcoded threshold of 100 to determine whether or not
+                # the scaling needs to be applied, or if the order of magnitude
+                # is already correct. For white blood cell counts expressed in
+                # x10E3/u, the upper limit of the reference range always falls
+                # below 100.
                 if max_val is not None and max_val >= 100:
                     print(
                         f"Warning: Correcting reference range ({min_val}, "

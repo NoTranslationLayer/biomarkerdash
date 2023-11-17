@@ -40,7 +40,7 @@ from biomarkerdash.constants import FOOTER_HTML
 def combine_html_files(
     category: str,
     plot_html_list: List[str],
-    output_directory: str = "_categories",
+    output_directory: str,
 ) -> str:
     """
     Combine multiple HTML sections related to a category into a single page.

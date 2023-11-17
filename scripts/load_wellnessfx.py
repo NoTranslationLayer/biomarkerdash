@@ -97,7 +97,9 @@ if __name__ == "__main__":
                             marker_plot_html = f.read()
                             html_content.append(marker_plot_html)
 
-        output_file = htm.combine_html_files(category, html_content)
+        output_file = htm.combine_html_files(
+            category, html_content, category_page_output_dir
+        )
         output_files.append((category, output_file))
 
         if category == INDEX_PAGE_CATEGORY:

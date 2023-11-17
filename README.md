@@ -45,8 +45,7 @@ For those who wish to continue adding their own data or for general understandin
 git clone https://github.com/NoTranslationLayer/biomarkerdash
 cd biomarkerdash
 pip install .
-cd scripts
-./load_wellnessfx.py <path/to/test_result_export.csv>
+./scripts/load_wellnessfx.py <path/to/test_result_export.csv>
 ```
 
 The script will generate a file named `BiomarkerDashboard.html` in the top level folder of the cloned repository. Open the file in any web browser to visualize the exported data.
